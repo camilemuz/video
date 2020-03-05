@@ -1,51 +1,43 @@
 package vista;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
 
-import com.toedter.calendar.JCalendar;
-import javax.swing.JList;
-import javax.swing.JComboBox;
-import javax.swing.JSpinner;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+
+import controlador.Conectorbd;
+import controlador.controladorVideo;
 
 public class addVideo3 extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField txtFullName;
+	private JComboBox cbNominationWon;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					addVideo3 frame = new addVideo3();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public addVideo3() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 682);
+	static video video = new video();
+	static controladorVideo controladorVideo = new controladorVideo();
+	
+	public addVideo3(){
+		setBounds(100, 100, 446, 402);
 		contentPane = new JPanel();
+		contentPane.setForeground(new Color(0, 0, 0));
 		contentPane.setBackground(new Color(255, 153, 51));
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0)));
 		setContentPane(contentPane);
@@ -55,71 +47,110 @@ public class addVideo3 extends JFrame {
 		panel.setLayout(null);
 		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0)));
 		panel.setBackground(new Color(51, 51, 102));
-		panel.setBounds(0, 0, 450, 71);
+		panel.setBounds(0, 0, 446, 71);
 		contentPane.add(panel);
 		
-		JLabel lblRegisterClient = new JLabel("REGISTER VIDEO");
-		lblRegisterClient.setForeground(Color.WHITE);
-		lblRegisterClient.setFont(new Font("Lucida Sans Unicode", Font.BOLD | Font.ITALIC, 22));
-		lblRegisterClient.setBounds(26, 23, 230, 26);
-		panel.add(lblRegisterClient);
+		JLabel lblRegisterUser = new JLabel("REGISTER VIDEO");
+		lblRegisterUser.setForeground(Color.WHITE);
+		lblRegisterUser.setFont(new Font("Lucida Sans Unicode", Font.BOLD | Font.ITALIC, 22));
+		lblRegisterUser.setBounds(26, 23, 230, 26);
+		panel.add(lblRegisterUser);
 		
-		JButton button = new JButton("Cancel");
-		button.setForeground(new Color(0, 102, 102));
-		button.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
-		button.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
-		button.setBackground(new Color(204, 204, 204));
-		button.setBounds(70, 604, 135, 50);
-		contentPane.add(button);
+		JButton btnRegister = new JButton("Register");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					controladorVideo.regitrar4(won());
+					video.setVisible(true);
+					setVisible(false);
+					JOptionPane.showMessageDialog(null, "REGISTRO CON EXITO");
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "REGISTRO SIN EXITO");
+				}
+			}
+		});
+		btnRegister.setForeground(new Color(0, 102, 102));
+		btnRegister.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
+		btnRegister.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
+		btnRegister.setBackground(new Color(204, 204, 204));
+		btnRegister.setBounds(257, 301, 135, 50);
+		contentPane.add(btnRegister);
 		
-		JButton button_1 = new JButton("Register");
-		button_1.setForeground(new Color(0, 102, 102));
-		button_1.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
-		button_1.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
-		button_1.setBackground(new Color(204, 204, 204));
-		button_1.setBounds(231, 604, 135, 50);
-		contentPane.add(button_1);
+
 		
-		JButton btnOther = new JButton("Other?");		
+		JLabel Nomination = new JLabel("Nomination Won:");
+		Nomination.setForeground(Color.WHITE);
+		Nomination.setFont(new Font("Arial Black", Font.BOLD, 20));
+		Nomination.setBounds(120, 108, 216, 29);
+		contentPane.add(Nomination);
+		
+		cbNominationWon = new JComboBox();
+		cbNominationWon.setFont(new Font("Arial", Font.BOLD, 20));
+		cbNominationWon.setBorder(new BevelBorder(BevelBorder.LOWERED, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK));
+		cbNominationWon.setBounds(62, 147, 310, 37);
+		contentPane.add(cbNominationWon);
+		try {
+		ArrayList<String> lista = new ArrayList<>();
+		String sql 	="SELECT nomination_name FROM nomination, nomination_video "
+				+ "where video_management_id_video = '"+ vi1() +"'"
+						+ "and id_nomination_video = id_nomination";
+		Conectorbd conector = new Conectorbd();
+		Connection conn = conector.conexion();
+		try{
+			Statement str = (Statement) conn.createStatement();
+			ResultSet r = str.executeQuery(sql);
+			while(r.next()){
+				lista.add(r.getString("nomination_name"));
+			}
+			for(int i=0; i<lista.size(); i++){
+				cbNominationWon.addItem(lista.get(i));
+			}
+			
+		}catch (Exception e) {
+		}
+		}catch (Exception e) {
+		}
+		
+		JButton btnOther = new JButton("Other");
 		btnOther.setForeground(new Color(0, 102, 102));
 		btnOther.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
 		btnOther.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
 		btnOther.setBackground(new Color(204, 204, 204));
-		btnOther.setBounds(148, 534, 135, 50);
+		btnOther.setBounds(61, 301, 135, 50);
 		contentPane.add(btnOther);
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
-		panel_1.setBackground(new Color(255, 153, 51));
-		panel_1.setBounds(37, 82, 373, 359);
-		contentPane.add(panel_1);
-		panel_1.setLayout(null);
-		
-		JLabel label = new JLabel("Title Movie:");
-		label.setBounds(34, 37, 127, 26);
-		panel_1.add(label);
-		label.setForeground(Color.WHITE);
-		label.setFont(new Font("Arial Black", Font.BOLD, 18));
-		
-		JLabel lblNominationWon = new JLabel("Nomination Won:");
-		lblNominationWon.setBounds(34, 155, 227, 26);
-		lblNominationWon.setForeground(Color.WHITE);
-		lblNominationWon.setFont(new Font("Arial Black", Font.BOLD, 18));
-		panel_1.add(lblNominationWon);
-		
-		txtFullName = new JTextField();
-		txtFullName.setBounds(33, 85, 296, 37);
-		panel_1.add(txtFullName);
-		txtFullName.setFont(new Font("Arial", Font.PLAIN, 20));
-		txtFullName.setColumns(10);
-		txtFullName.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0)));
-		txtFullName.setBackground(new Color(255, 153, 51));
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBackground(new Color(255, 153, 51));
-		comboBox.setBounds(87, 211, 195, 31);
-		panel_1.add(comboBox);
 		setLocationRelativeTo(null);
-			setUndecorated(true);
+		setUndecorated(true);
+	}
+	
+	public int won() throws SQLException{
+		Conectorbd conector = new Conectorbd();
+		Connection c = conector.conexion();
+	 	String sql = "SELECT * FROM nomination, nomination_video "
+	 			+ "where video_management_id_video = '"+ vi1()+"'";
+		Statement st = (Statement) c.createStatement();
+	    ResultSet rs = st.executeQuery(sql);
+	    int aux = 0;
+		while(rs.next()){
+	    	if(cbNominationWon.getSelectedItem().toString().equals(rs.getString("nomination_name").toString())){
+	    		aux= Integer.parseInt(rs.getString("id_nomination"));
+	        	
+	    	}
+		}
+	    return aux;
+	}
+	
+	
+	public int vi1() throws SQLException{
+		Conectorbd conector = new Conectorbd();
+		Connection c = conector.conexion();
+	 	String sql = "SELECT MAX(id_video) FROM video_management";
+		Statement st = (Statement) c.createStatement();
+	    ResultSet rs = st.executeQuery(sql);
+	    int aux = 0;
+		if(rs.next()){
+	    	aux=rs.getInt(1);
+		}
+	    return aux;
 	}
 }

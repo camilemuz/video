@@ -1,52 +1,40 @@
 package vista;
 
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Font;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
-
-import com.toedter.calendar.JCalendar;
-import javax.swing.JList;
-import javax.swing.JComboBox;
-import javax.swing.JSpinner;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+import controlador.Conectorbd;
+import controlador.controladorVideo;
 
 public class addVideo2 extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField txtFullName;
-	private JTextField textField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					addVideo2 frame = new addVideo2();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
+	private JTextField txtAlternative;
+	private JComboBox cbNomination;
+	private JComboBox cbActor;
+	
+	static controladorVideo controladorVideo= new controladorVideo();
+	static addVideo3 addVideo3 = new addVideo3();
+	
 	public addVideo2() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 682);
+		setBounds(100, 100, 446, 402);
 		contentPane = new JPanel();
+		contentPane.setForeground(new Color(0, 0, 0));
 		contentPane.setBackground(new Color(255, 153, 51));
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0)));
 		setContentPane(contentPane);
@@ -56,89 +44,177 @@ public class addVideo2 extends JFrame {
 		panel.setLayout(null);
 		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0)));
 		panel.setBackground(new Color(51, 51, 102));
-		panel.setBounds(0, 0, 450, 71);
+		panel.setBounds(0, 0, 446, 71);
 		contentPane.add(panel);
 		
-		JLabel lblRegisterClient = new JLabel("REGISTER VIDEO");
-		lblRegisterClient.setForeground(Color.WHITE);
-		lblRegisterClient.setFont(new Font("Lucida Sans Unicode", Font.BOLD | Font.ITALIC, 22));
-		lblRegisterClient.setBounds(26, 23, 230, 26);
-		panel.add(lblRegisterClient);
+		JLabel lblRegisterUser = new JLabel("REGISTER VIDEO");
+		lblRegisterUser.setForeground(Color.WHITE);
+		lblRegisterUser.setFont(new Font("Lucida Sans Unicode", Font.BOLD | Font.ITALIC, 22));
+		lblRegisterUser.setBounds(26, 23, 230, 26);
+		panel.add(lblRegisterUser);
 		
-		JLabel lblTitleMovie = new JLabel("Actor:");
-		lblTitleMovie.setForeground(Color.WHITE);
-		lblTitleMovie.setFont(new Font("Arial Black", Font.BOLD, 18));
-		lblTitleMovie.setBounds(70, 186, 72, 29);
-		contentPane.add(lblTitleMovie);
+		txtAlternative = new JTextField();
+		txtAlternative.setFont(new Font("Arial", Font.PLAIN, 20));
+		txtAlternative.setColumns(10);
+		txtAlternative.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0)));
+		txtAlternative.setBackground(new Color(255, 153, 51));
+		txtAlternative.setBounds(33, 123, 385, 37);
+		contentPane.add(txtAlternative);
 		
-		txtFullName = new JTextField();
-		txtFullName.setFont(new Font("Arial", Font.PLAIN, 20));
-		txtFullName.setColumns(10);
-		txtFullName.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0)));
-		txtFullName.setBackground(new Color(255, 153, 51));
-		txtFullName.setBounds(70, 138, 296, 37);
-		contentPane.add(txtFullName);
+		JLabel lblFullName = new JLabel("Title Alternative:");
+		lblFullName.setForeground(Color.WHITE);
+		lblFullName.setFont(new Font("Arial Black", Font.BOLD, 20));
+		lblFullName.setBounds(33, 93, 198, 29);
+		contentPane.add(lblFullName);
 		
-		JButton button = new JButton("Cancel");
-		button.setForeground(new Color(0, 102, 102));
-		button.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
-		button.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
-		button.setBackground(new Color(204, 204, 204));
-		button.setBounds(70, 604, 135, 50);
-		contentPane.add(button);
+		JLabel lblUsername = new JLabel("Actor:");
+		lblUsername.setForeground(Color.WHITE);
+		lblUsername.setFont(new Font("Arial Black", Font.BOLD, 20));
+		lblUsername.setBounds(33, 187, 135, 29);
+		contentPane.add(lblUsername);
 		
-		JButton button_1 = new JButton("Register");
-		button_1.setForeground(new Color(0, 102, 102));
-		button_1.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
-		button_1.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
-		button_1.setBackground(new Color(204, 204, 204));
-		button_1.setBounds(231, 604, 135, 50);
-		contentPane.add(button_1);
+		JButton btnRegister = new JButton("Next");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					controladorVideo.regitrar1(vi(), ac());
+					controladorVideo.regitrar2(nom(), vi());
+					controladorVideo.regitrar3(vi(), txtAlternative.getText().toString());
+					addVideo3.setVisible(true);
+					limpiar();
+					setVisible(false);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		btnRegister.setForeground(new Color(0, 102, 102));
+		btnRegister.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
+		btnRegister.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
+		btnRegister.setBackground(new Color(204, 204, 204));
+		btnRegister.setBounds(257, 301, 135, 50);
+		contentPane.add(btnRegister);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBackground(new Color(255, 153, 51));
-		comboBox.setBounds(70, 226, 123, 29);
-		contentPane.add(comboBox);
+		cbActor = new JComboBox();
+		cbActor.setBorder(new BevelBorder(BevelBorder.LOWERED, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK));
+		cbActor.setFont(new Font("Arial", Font.BOLD, 20));
+		cbActor.setBounds(33, 218, 184, 37);
+		contentPane.add(cbActor);
 		
-		JLabel label = new JLabel("Title Movie:");
-		label.setForeground(Color.WHITE);
-		label.setFont(new Font("Arial Black", Font.BOLD, 18));
-		label.setBounds(70, 94, 160, 29);
-		contentPane.add(label);
+		ArrayList<String> lista = new ArrayList<>();
+		String sql 	="SELECT full_name FROM actor";
+		Conectorbd conector = new Conectorbd();
+		Connection conn = conector.conexion();
+		try{
+			Statement str = (Statement) conn.createStatement();
+			ResultSet r = str.executeQuery(sql);
+			while(r.next()){
+				lista.add(r.getString("full_name"));
+			}
+			for(int i=0; i<lista.size(); i++){
+				cbActor.addItem(lista.get(i));
+			}
+			
+		}catch (Exception e) {
+		}
 		
-		JLabel lblYearOfPublication = new JLabel("Title Alternative:");
-		lblYearOfPublication.setForeground(Color.WHITE);
-		lblYearOfPublication.setFont(new Font("Arial Black", Font.BOLD, 18));
-		lblYearOfPublication.setBounds(70, 389, 225, 29);
-		contentPane.add(lblYearOfPublication);
+		JLabel Nomination = new JLabel("Nomination:");
+		Nomination.setForeground(Color.WHITE);
+		Nomination.setFont(new Font("Arial Black", Font.BOLD, 20));
+		Nomination.setBounds(234, 187, 216, 29);
+		contentPane.add(Nomination);
 		
-		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setBackground(new Color(255, 153, 51));
-		comboBox_2.setBounds(70, 327, 123, 29);
-		contentPane.add(comboBox_2);
+		cbNomination = new JComboBox();
+		cbNomination.setFont(new Font("Arial", Font.BOLD, 20));
+		cbNomination.setBorder(new BevelBorder(BevelBorder.LOWERED, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK));
+		cbNomination.setBounds(234, 218, 184, 37);
+		contentPane.add(cbNomination);
 		
-		JLabel lblNomination = new JLabel("Nomination:");
-		lblNomination.setForeground(Color.WHITE);
-		lblNomination.setFont(new Font("Arial Black", Font.BOLD, 18));
-		lblNomination.setBounds(70, 279, 135, 29);
-		contentPane.add(lblNomination);
+		ArrayList<String> lista1 = new ArrayList<>();
+		String sql1 ="SELECT nomination_name FROM nomination";
+		try{
+			Statement str1 = (Statement) conn.createStatement();
+			ResultSet r1 = str1.executeQuery(sql1);
+			while(r1.next()){
+				lista1.add(r1.getString("nomination_name"));
+			}
+			for(int i=0; i<lista1.size(); i++){
+				cbNomination.addItem(lista1.get(i));
+			}
+			
+		}catch (Exception e) {
+		}
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Arial", Font.PLAIN, 20));
-		textField.setColumns(10);
-		textField.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0), new Color(0, 0, 0)));
-		textField.setBackground(new Color(255, 153, 51));
-		textField.setBounds(70, 437, 296, 37);
-		contentPane.add(textField);
-		
-		JButton btnOther = new JButton("Other?");		
+		JButton btnOther = new JButton("Other");
+		btnOther.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					controladorVideo.regitrar1(vi(), ac());
+					controladorVideo.regitrar2(nom(), vi());
+					controladorVideo.regitrar3(vi(), txtAlternative.getText().toString());
+					limpiar();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		btnOther.setForeground(new Color(0, 102, 102));
 		btnOther.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
 		btnOther.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
 		btnOther.setBackground(new Color(204, 204, 204));
-		btnOther.setBounds(148, 534, 135, 50);
+		btnOther.setBounds(61, 301, 135, 50);
 		contentPane.add(btnOther);
 		setLocationRelativeTo(null);
-			setUndecorated(true);
+		setUndecorated(true);
+	}
+
+	public int ac() throws SQLException{
+		Conectorbd conector = new Conectorbd();
+		Connection c = conector.conexion();
+	 	String sql = "SELECT * FROM actor";
+		Statement st = (Statement) c.createStatement();
+	    ResultSet rs = st.executeQuery(sql);
+	    int aux = 0;
+		while(rs.next()){
+	    	if(cbActor.getSelectedItem().toString().equals(rs.getString("full_name").toString())){
+	    		aux= Integer.parseInt(rs.getString("id_actor"));
+	        	
+	    	}
+		}
+	    return aux;
+	}
+	
+	public int nom() throws SQLException{
+		Conectorbd conector = new Conectorbd();
+		Connection c = conector.conexion();
+	 	String sql = "SELECT * FROM nomination";
+		Statement st = (Statement) c.createStatement();
+	    ResultSet rs = st.executeQuery(sql);
+	    int aux = 0;
+		while(rs.next()){
+	    	if(cbNomination.getSelectedItem().toString().equals(rs.getString("nomination_name").toString())){
+	    		aux= Integer.parseInt(rs.getString("id_nomination"));
+	        	
+	    	}
+		}
+	    return aux;
+	}
+	
+	public int vi() throws SQLException{
+		Conectorbd conector = new Conectorbd();
+		Connection c = conector.conexion();
+	 	String sql = "SELECT MAX(id_video) FROM video_management";
+		Statement st = (Statement) c.createStatement();
+	    ResultSet rs = st.executeQuery(sql);
+	    int aux = 0;
+		if(rs.next()){
+	    	aux=rs.getInt(1);
+		}
+	    return aux;
+	}
+	
+	public void limpiar() {
+		txtAlternative.setText("");
 	}
 }
